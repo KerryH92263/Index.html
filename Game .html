@@ -1,0 +1,27 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quarks Casino - Dice Game </title> 
+    <script src="code.js" defer></script>
+    <link href="main.css" rel="stylesheet"> 
+</head>
+<body> 
+    <header>
+    <h1> Welcome to Quarks Casino </h1> 
+    <p> Try your luck with the Dice Game!</p> 
+         <form onsubmit="playDiceGame(); return false;"> 
+         <button onclick="updateText();">Change Text</button>
+         <input type="submit" value="Roll the Dice"> 
+    </form>
+  
+   <div id="gameResult"></div>
+    <form> <onsubmit"displayUserMessage(document.getElementById('playerName').value); return false;"> 
+    <label for="playerName"> Enter your name:</label>
+    <input type="text" id="playName" name="playerName"> 
+    <input type ="submit" value="Submit"> 
+    </form> 
+    <div id="userMessage"></div> 
+</body>
+</html>
