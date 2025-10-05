@@ -1,0 +1,57 @@
+<!-- 
+  Name: <Kerry Hayes> 
+  File: index.html 
+  Purpose: Minimal event-driven demo with Start/Stop buttons that move an image 
+--> 
+ 
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+  <meta charset="UTF-8" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+  <title>Event-Driven Meme Mover (Basics)</title> 
+  <style> 
+    body { 
+      font-family: system-ui, Arial, sans-serif; 
+      background: linear-gradient(180deg, #f7f9fc, #eef3ff); 
+      color: #111827; 
+      margin: 0; 
+      padding: 24px; 
+    } 
+    .app { max-width: 800px; margin: 0 auto; } 
+    h1 { margin: 0 0 16px 0; } 
+    .panel { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; 
+             padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); } 
+    .controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; } 
+    button { padding: 10px 16px; border: none; border-radius: 999px; font-weight: 700; 
+cursor: pointer; } 
+    #startBtn { background: #10b981; color: #fff; } 
+    #stopBtn  { background: #ef4444; color: #fff; } 
+    #startBtn:disabled, #stopBtn:disabled { opacity: 0.5; cursor: not-allowed; } 
+    #statusArea { margin-top: 8px; min-height: 20px; } 
+    .stage { position: relative; height: 320px; border-radius: 14px; border: 2px dashed 
+#c7d2fe; 
+             background: #eef2ff; overflow: hidden; } 
+    #meme { position: absolute; width: 140px; height: 140px; top: 0; left: 0;  
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15); border-radius: 14px; object-fit: cover; 
+            user-select: none; pointer-events: none; } 
+  </style> 
+</head> 
+ 
+<body> 
+  <div class="app"> 
+    <h1>Event-Driven Meme Mover (Basics)</h1> 
+    <div class="panel"> 
+      <div class="controls"> 
+        <button id="startBtn" onclick="handleStartClick()">Start</button> 
+        <button id="stopBtn" onclick="handleStopClick()" disabled>Stop</button> 
+      </div> 
+      <div id="statusArea">Status: Ready.</div> 
+    </div> 
+    <div class="panel stage"> 
+      <img id="meme" src="https://i.imgur.com/fYV8r7P.jpeg" alt="Meme" /> 
+    </div> 
+  </div> 
+  <script src="app.js"></script> 
+</body> 
+</html> 
