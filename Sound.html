@@ -1,0 +1,78 @@
+<!-- 
+    Name: Kerry Hayes
+    Assignment: Adding Sound to a Webpage
+    Description: This webpage plays a background sound and includes visual styling to enhance user experience.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Metadata and page title (required) -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Station Sound Experience</title>
+
+    <!-- Link to a custom Google font (optional) -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&displ ay=swap" rel="stylesheet">
+
+    <!-- Internal CSS or main.css styles to enhance the look and feel (required)-->
+    <style>
+        /* Apply a futuristic font and center text */
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: #000022; /* Deep space background color */
+            color: #ffffff; /* White text for contrast */
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Style the image with spacing and round corners */
+        img {
+            width: 300px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        /* Style the play button */
+        button {
+            font-size: 16px;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #1e90ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* Add hover effect to button */
+        button:hover {
+            background-color: #4682b4;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main header of the webpage (required) -->
+    <h1>Experience the Sounds of Kermit the Frog</h1>
+
+    <!-- Add a themed image (be sure to save it locally in your project folder)(required) -->
+    <img src="Funny Meme.jpg" alt="Funny Meme Image">
+
+    <!-- Add a button that triggers the sound when clicked (required) -->
+    <button onclick="playSound()">Play Background Sound</button>
+
+    <!-- HTML audio element referencing a local MP3 file (required) -->
+    <audio id="spaceAudio">
+        <source src="Warning Siren-SoundBible.com-898272278.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- JavaScript section that defines how the sound will be played (nice to have) -->
+    <script>
+        // Function to play the audio file
+        function playSound() {
+            document.getElementById('spaceAudio').play(); // Play the sound when button is clicked
+        }
+    </script>
+</body>
+</html>
