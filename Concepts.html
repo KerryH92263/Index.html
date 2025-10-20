@@ -1,0 +1,219 @@
+<!--
+  Student Name: Kerry Hayes
+  File: index.html
+  Description:
+    This page demonstrates at least 3 programming concepts (if/else, loops, string manipulation & validation,
+    functions, and classes/objects) using JavaScript. All user input is handled with a form submit,
+    messages are shown via innerHTML, no alerts, no inline JS, and no addEventListener is used.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Set the character encoding -->
+    <meta charset="UTF-8" />
+    <!-- Make the layout responsive on mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Page title shown in the browser tab -->
+    <title>Palindrome Checker • JS Concepts Demo</title>
+
+    <!-- Creative element #1: Import a clean Google Font -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Basic, readable styling (another creative element: gradient background) -->
+    <style>
+      /* Apply the imported font to the whole page */
+      :root {
+        --card-bg: #52a0d4;
+        --ink: #9b2424;
+        --muted: #2c4880;
+        --accent: #1a0fe0;
+        --good: #033625;
+        --bad: #e20808;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        color: var(--ink);
+        background: linear-gradient(135deg, #eef2ff, #e0f2fe);
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: 2rem;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 760px;
+        background: var(--card-bg);
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(2, 6, 23, 0.1);
+        border: 1px solid rgba(2, 6, 23, 0.05);
+      }
+
+      h1 {
+        margin: 0 0 0.25rem 0;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+
+      p.subtle {
+        margin: 0 0 1.25rem 0;
+        color: var(--muted);
+      }
+
+      form {
+        display: grid;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .row {
+        display: grid;
+        gap: 0.5rem;
+      }
+
+      label {
+        font-weight: 600;
+      }
+
+      input[type="text"] {
+        padding: 0.8rem 1rem;
+        border-radius: 0.75rem;
+        border: 1px solid #e5e7eb;
+        outline: none;
+        font-size: 1rem;
+      }
+      input[type="text"]:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+      }
+
+      .options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: center;
+        color: var(--muted);
+      }
+
+      button[type="submit"] {
+        justify-self: start;
+        border: none;
+        background: var(--accent);
+        color: white;
+        font-weight: 700;
+        padding: 0.9rem 1.2rem;
+        border-radius: 0.75rem;
+        cursor: pointer;
+      }
+      button[type="submit"]:hover {
+        filter: brightness(1.05);
+      }
+
+      .panel {
+        border-radius: 0.75rem;
+        border: 1px dashed #3faf0a;
+        padding: 1rem;
+        background: #64ac12;
+      }
+
+      .ok { color: var(--good); font-weight: 700; }
+      .no { color: var(--bad); font-weight: 700; }
+
+      .footer-note {
+        margin-top: 1rem;
+        font-size: 0.95rem;
+        color: var(--muted);
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      @media (max-width: 720px) {
+        .grid-2 { grid-template-columns: 1fr; }
+      }
+    </style>
+
+    <!-- Load our JavaScript file (no functions defined in HTML, no event listeners used) -->
+    <script src="Logic.js" defer></script>
+  </head>
+  <body>
+    <!-- Card container to keep content centered and readable -->
+    <main class="card">
+      <!-- Main header for the app -->
+      <h1>Palindrome Checker</h1>
+
+      <!-- Short subtitle explaining what this page does -->
+      <p class="subtle">
+        Enter a word or phrase. We’ll validate your input and check if it’s a palindrome using
+        JavaScript <strong>decision logic</strong>, <strong>loops</strong>, <strong>string manipulation</strong>,
+        <strong>functions</strong>, and a <strong>class</strong>.
+      </p>
+
+      <!-- All user input is via a form + submit (required by assignment) -->
+      <form id="palForm" novalidate>
+        <!-- Text input row for the user's phrase -->
+        <div class="row">
+          <label for="phrase">Enter text to check</label>
+          <input
+            id="phrase"
+            name="phrase"
+            type="text"
+            placeholder="e.g., 'Able was I, ere I saw Elba'"
+            autocomplete="off"
+            required
+          />
+        </div>
+
+        <!-- Options row for validation controls -->
+        <div class="options">
+          <label>
+            <input id="ignoreSpaces" type="checkbox" />
+            Ignore spaces
+          </label>
+          <label>
+            <input id="ignorePunct" type="checkbox" checked />
+            Ignore punctuation
+          </label>
+          <label>
+            <input id="caseInsensitive" type="checkbox" checked />
+            Case-insensitive
+          </label>
+        </div>
+
+        <!-- Submit button to run validation + palindrome logic -->
+        <button type="submit">Check Palindrome</button>
+
+        <!-- Panels for messages: MUST use innerHTML (no alerts) -->
+        <div class="grid-2">
+          <div class="panel">
+            <strong>Validation</strong>
+            <div id="validationMsg" class="subtle">Awaiting input…</div>
+          </div>
+          <div class="panel">
+            <strong>Result</strong>
+            <div id="palindromeMsg" class="subtle">No result yet.</div>
+          </div>
+        </div>
+
+        <!-- Extra computed details to show string stats (lengths, cleaned output, etc.) -->
+        <div class="panel">
+          <strong>Details</strong>
+          <div id="detailsMsg" class="subtle">We’ll show cleaned text, reverse, and counts here.</div>
+        </div>
+      </form>
+   </main>
+  </body>
+</html>
