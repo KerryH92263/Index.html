@@ -1,0 +1,111 @@
+<!--
+  Author: Your Name
+  Assignment: Palindrome Checker
+  Description: This webpage takes user input and checks if it's a palindrome.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Palindrome Checker</title>
+
+  <!-- Use a Google font for creativity -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* Creative styling for background and layout */
+    body {
+      background: linear-gradient(135deg, #f0f9ff, #e6fffa);
+      font-family: "Inter", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    /* Card container for the app */
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 600px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2563eb;
+    }
+
+    label {
+      font-weight: 600;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      margin-top: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background-color: #2563eb;
+      color: white;
+    }
+
+    .btn-ghost {
+      background-color: transparent;
+      border: 1px solid #ccc;
+    }
+
+    #messages {
+      margin-top: 16px;
+      padding: 10px;
+      background: #f9fafb;
+      border-radius: 8px;
+      min-height: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Palindrome Checker</h1>
+
+    <!--
+      FORM for user input — must use form per assignment instructions.
+      We will handle submission with JavaScript (no inline JS, no addEventListener).
+    -->
+    <form id="palForm" novalidate>
+      <label for="userText">Enter a word or phrase:</label>
+      <input id="userText" name="userText" type="text" placeholder="e.g. Race car" required />
+
+      <!-- Buttons for submission and exit -->
+      <div style="margin-top: 12px;">
+        <button id="submitBtn" class="btn-primary" type="submit">Check Palindrome</button>
+        <button id="doneBtn" class="btn-ghost" type="button">I'm Done</button>
+      </div>
+    </form>
+
+    <!-- Where messages (validation + results) will appear -->
+    <div id="messages"></div>
+  </div>
+
+  <!-- Link to our external JavaScript file -->
+  <script src="app.js"></script>
+</body>
+</html>

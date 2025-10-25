@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Event-Driven Meme Mover (Basics)</title>
+  <style>
+    /* --- Base layout --- */
+    :root{
+      --bg: #f5f8ff;
+      --panel: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --brand: #0ea5e9;
+      --green: #22c55e;
+      --red: #ef4444;
+      --ring: rgba(59,130,246,.35);
+    }
+    *{ box-sizing: border-box; }
+    html, body{
+      height:100%;
+      margin:0;
+      background: radial-gradient(1200px 600px at 50% -10%, #eef2ff 0%, var(--bg) 55%);
+      font: 16px/1.4 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+    }
+    .container{
+      max-width: 980px;
+      margin: 32px auto 80px;
+      padding: 0 24px;
+    }
+    h1{
+      font-size: clamp(28px, 3.6vw, 44px);
+      margin: 0 0 18px;
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+    /* --- Card/controls --- */
+    .card{
+      background: var(--panel);
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(2,6,23,.08);
+      padding: 18px 22px 22px;
+      border: 1px solid #eef2ff;
+    }
+    .controls{
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .btn{
+      appearance: none;
+      border: 0;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(2,6,23,.08);
+      transition: transform .06s ease, box-shadow .2s ease, filter .2s ease;
+      color:#fff;
+    }
+    .btn:focus{ outline: none; box-shadow: 0 0 0 4px var(--ring); }
+    .btn:active{ transform: translateY(1px); filter: saturate(1.2); }
+    .btn[disabled]{ opacity: .5; cursor:not-allowed; }
+    .btn-start{ background: linear-gradient(180deg, #34d399, var(--green)); }
+    .btn-stop{ background: linear-gradient(180deg, #f87171, var(--red)); }
+    .status{
+      font-weight: 600;
+      color: var(--muted);
+    }
+    /* --- Play area (arena) --- */
+    .arena-wrap{ margin-top: 16px; }
+    .arena{
+      position: relative;
+      height: 380px;
+      background: #f3f6ff;
+      border: 2px dashed #c7d2fe;
+      border-radius: 16px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.6), 0 10px 24px rgba(2,6,23,.03);
+      overflow: hidden;
+    }
+    /* --- Meme sprite --- */
+    .meme{
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      width: 140px;
+      height: 140px;
+      border-radius: 16px;
+      box-shadow: 0 10px 20px rgba(2,6,23,.18);
+      user-select: none;
+      -webkit-user-drag: none;
+      object-fit: cover;
+      background: #111827;
+    }
+    /* Fallback label behind the image (visible if image fails & is transparent) */
+    .meme.fallback{
+      display: grid;
+      place-items: center;
+      color: #e5e7eb;
+      font-size: 13px;
+      text-align: center;
+      padding: 10px;
+    }
+    .sr-only{
+      position:absolute;
+      width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+      clip:rect(0,0,0,0);white-space:nowrap;border:0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Event-Driven Meme Mover (Basics)</h1>
+
+    <section class="card" aria-labelledby="controls-title">
+      <h2 id="controls-title" class="sr-only">Controls</h2>
+      <div class="controls">
+        <button id="startBtn" class="btn btn-start" type="button">Start</button>
+        <button id="stopBtn" class="btn btn-stop" type="button" disabled>Stop</button>
+      </div>
+      <div id="status" class="status" aria-live="polite">Status: Ready.</div>
+
+      <div class="arena-wrap">
+        <div id="arena" class="arena">
+          <!--
+            Put your meme image in the same folder and name it meme.png
+            or set the src to any URL you like.
+          -->
+          <img id="meme" class="meme"
+               src="Funny Meme.jpg"
+               alt="Meme"
+               onerror="useFallback()" />
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const arena = document.getElementById('arena');
+    const meme = document.getElementById('meme');
+    const statusEl = document.getElementById('status');
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn  = document.getElementById('stopBtn');
+
+    let running = false;
+    let rafId = 0;
+    let vx = 2.2 + Math.random()*2.2; // px per frame
+    let vy = 1.6 + Math.random()*2.0;
+
+    function setStatus(text){ statusEl.textContent = text; }
+
+    function toggleButtons(isRunning){
+      startBtn.disabled = isRunning;
+      stopBtn.disabled = !isRunning;
+    }
+
+    function clamp(n, min, max){ return Math.max(min, Math.min(n, max)); }
+
+    function frame(){
+      const rect = arena.getBoundingClientRect();
+      const w = rect.width, h = rect.height;
+      const mw = meme.offsetWidth, mh = meme.offsetHeight;
+
+      // current position
+      let x = parseFloat(meme.style.left || 0);
+      let y = parseFloat(meme.style.top || 0);
+
+      // next position
+      x += vx;
+      y += vy;
+
+      // bounce
+      if(x <= 0){ x = 0; vx = Math.abs(vx); }
+      if(y <= 0){ y = 0; vy = Math.abs(vy); }
+      if(x + mw >= w){ x = w - mw; vx = -Math.abs(vx); }
+      if(y + mh >= h){ y = h - mh; vy = -Math.abs(vy); }
+
+      meme.style.left = x + 'px';
+      meme.style.top  = y + 'px';
+
+      if(running) rafId = requestAnimationFrame(frame);
+    }
+
+    function start(){
+      if(running) return;
+      running = true;
+      toggleButtons(true);
+      setStatus('Status: Moving…');
+      rafId = requestAnimationFrame(frame);
+    }
+    function stop(){
+      running = false;
+      cancelAnimationFrame(rafId);
+      toggleButtons(false);
+      setStatus('Status: Stopped.');
+    }
+
+    startBtn.addEventListener('click', start);
+    stopBtn.addEventListener('click', stop);
+
+    // Drag within the arena
+    (()=>{
+      let dragging = false;
+      let offsetX = 0, offsetY = 0;
+      let wasRunning = false;
+
+      const startDrag = (ev)=>{
+        ev.preventDefault();
+        const isTouch = ev.type.startsWith('touch');
+        const p = isTouch ? ev.touches[0] : ev;
+        const memeRect = meme.getBoundingClientRect();
+        const arenaRect = arena.getBoundingClientRect();
+
+        offsetX = p.clientX - memeRect.left;
+        offsetY = p.clientY - memeRect.top;
+
+        wasRunning = running;
+        stop(); // pause while dragging
+        dragging = true;
+        setStatus('Status: Dragging…');
+      };
+      const onMove = (ev)=>{
+        if(!dragging) return;
+        const isTouch = ev.type.startsWith('touch');
+        const p = isTouch ? ev.touches[0] : ev;
+
+        const aRect = arena.getBoundingClientRect();
+        const mw = meme.offsetWidth, mh = meme.offsetHeight;
+
+        let x = p.clientX - aRect.left - offsetX;
+        let y = p.clientY - aRect.top  - offsetY;
+        x = clamp(x, 0, aRect.width - mw);
+        y = clamp(y, 0, aRect.height - mh);
+
+        meme.style.left = x + 'px';
+        meme.style.top  = y + 'px';
+      };
+      const endDrag = ()=>{
+        if(!dragging) return;
+        dragging = false;
+        setStatus('Status: Ready.');
+        if(wasRunning) start();
+      };
+
+      meme.addEventListener('mousedown', startDrag);
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', endDrag);
+
+      meme.addEventListener('touchstart', startDrag, {passive:false});
+      window.addEventListener('touchmove', onMove, {passive:false});
+      window.addEventListener('touchend', endDrag);
+    })();
+
+    // Keyboard nudges inside the arena
+    window.addEventListener('keydown', (e)=>{
+      const step = e.shiftKey ? 12 : 6;
+      const w = arena.clientWidth, h = arena.clientHeight;
+      const mw = meme.offsetWidth, mh = meme.offsetHeight;
+      let x = parseFloat(meme.style.left || 0);
+      let y = parseFloat(meme.style.top || 0);
+
+      if(e.key === 'ArrowLeft')  x -= step;
+      if(e.key === 'ArrowRight') x += step;
+      if(e.key === 'ArrowUp')    y -= step;
+      if(e.key === 'ArrowDown')  y += step;
+
+      x = clamp(x, 0, w - mw);
+      y = clamp(y, 0, h - mh);
+      meme.style.left = x + 'px';
+      meme.style.top  = y + 'px';
+    });
+
+    // Fallback image if meme.png is missing
+    function useFallback(){
+      // Swap the <img> to a simple inline SVG data URL
+      const svg = encodeURIComponent(`
+        <svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'>
+          <defs>
+            <linearGradient id='g' x1='0' x2='0' y1='0' y2='1'>
+              <stop offset='0' stop-color='#0ea5e9'/>
+              <stop offset='1' stop-color='#1d4ed8'/>
+            </linearGradient>
+          </defs>
+          <rect rx='16' ry='16' width='100%' height='100%' fill='url(#g)'/>
+          <g fill='#e5e7eb' font-family='Segoe UI, Roboto, Arial' text-anchor='middle'>
+            <text x='70' y='64' font-size='16' font-weight='700'>Meme</text>
+            <text x='70' y='86' font-size='12'>placeholder</text>
+          </g>
+        </svg>
+      `);
+      meme.src = "data:image/svg+xml;charset=utf8," + svg;
+    }
+    window.useFallback = useFallback;
+  </script>
+</body>
+</html>

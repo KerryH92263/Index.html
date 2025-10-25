@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Secure Access Form</title>
+    <script src="validate.js" defer></script>
+<style>
+        body {
+            background-color: #f0f8ff44;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 40px;
+        }
+        form {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 450px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.397);
+        }
+        input, button {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #cccccc00;
+        }
+        button {
+            background-color: #0078D4;
+            color: rgba(255, 255, 255, 0.39);
+            border: none;
+        }
+        #message {
+            margin-top: 20px;
+            font-weight: bold;
+            color: rgba(139, 0, 0, 0.075);
+        }
+        img {
+            max-width: 100%;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+<h1>Welcome to the Secure Vault</h1>
+<form id="userForm" onsubmit="return validateForm();">
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="firstName" required>
+
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName" required>
+
+    <label for="zipCode">Zip Code:</label>
+    <input type="text" id="zipCode" name="zipCode" required>
+
+    <button type="submit">Unlock Message</button>
+</form>
+
+<div id="message"></div>
+
+<img src="C:\Users\Owner\Pictures\Funny Meme.jpg"Security image banner">
+
+</body>
+</html>

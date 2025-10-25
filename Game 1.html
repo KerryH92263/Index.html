@@ -1,0 +1,34 @@
+<!DOCTYPE html> <!--Declares HTML document type so browser knows what mode were using-->
+<html lang="en">
+<head> <!-- metadata and external resource links live here (not visible content)-->
+    <meta charset="UTF-8"> <!-- set characters encoding avoid weird characters -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quarks Casino - Dice Game </title> <!-- browser tab title helps with bookmarking-->
+    <script src="code.js" defer></script> <!-- loads external JS, "defer" waits until HTML is parsed-->
+    <!-- can add in main.css file here-->
+</head>
+<body> <!-- Visible page content (where users can see!)-->
+    <!--Create a Page header-->
+    <h1> Welcome to Quarks Casino </h1> <!-- Main heading for the webpage-->
+    <p> Try your luck with the Dice Game!</p> <!-- subheading / description-->
+
+    <!-- Form to trigger the game-->
+     <form onsubmit="playDiceGame(); return false;"> <!-- when submitted, calls playDice Game; returns false prevents page reload-->
+        <!-- Submit button-->
+         <input type="submit" value="Roll the Dice"> <!-- Button to submit the form (fires onsubmit above)-->
+    </form>
+  <!-- Display the result-->  
+   <div id="gameResult"></div>
+   <!-- Empty contain; JS will write the outcome text here-->
+
+   <!-- Example of parametrixed function-->
+    <form> onsubmit"displayUserMessage(document.getElementById('playerName').value); return false;" <!-- on submit, passess input value to display the name-->
+    <label for="playerName"> Enter your name:</label>
+    <input type="text" id="playName" name="playerName"> <!-- text field where user types their name-->
+    <input type ="submit" value="Submit"> <!-- button that triggers the form onsubmit-->
+    </form>
+    
+    <!-- display the personalized message-->
+     <div id="userMessage"></div> <!--JS will insert Goodluck, <name> here-->
+</body>
+</html>
